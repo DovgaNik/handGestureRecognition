@@ -24,13 +24,25 @@ with GestureRecognizer.create_from_options(options) as recognizer:
         
         gesture_recognition_result = recognizer.recognize_for_video(mp_image, int(capture.get(cv2.CAP_PROP_POS_MSEC)))
         
+
         try:
-            top_gesture = gesture_recognition_result.gestures[0][0]
-            print(top_gesture)
-        except:
-            pass
+            for landmark in gesture_recognition_result.hand_landmarks[0]:
+                h, w, _ = frame.shape
+                cx, cy = int(landmark.x * w), int(landmark.y * h)
+                cv2.circle(frame, (cx, cy), 5, (0, 255, 0), -1)
 
+            print("Good frame")
 
+            connections = [(0, 1), (1, 2), (2, 3), (3, 4), (0, 5), (5, 9), (9, 13), (13, 17),
+                           (0, 17), (5, 13), (0, 9), (9, 5), (5, 2), (2, 0)]
+            for connection in connections:
+                start_point = (int(gesture_recognition_result.hand_landmarks[0][connection[0]].x * w), int(gesture_recognition_result.hand_landmarks[0][connection[0]].y * h))
+                end_point = (int(gesture_recognition_result.hand_landmarks[0][connection[1]].x * w), int(gesture_recognition_result.hand_landmarks[0][connection[1]].y * h))
+                cv2.line(frame, start_point, end_point, (255, 0, 0), 2)
+        except Exception as e:
+            print(f"Bad frame {e}")
+
+        
 
 
         cv2.imshow('Webcam', frame)
