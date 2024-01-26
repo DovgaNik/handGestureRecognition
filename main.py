@@ -55,7 +55,7 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                     cv2.circle(frame, (cx, cy), 4, (255, 0, 0), -1)
 
                 connections = [(0, 1), (1, 2), (2, 3), (3, 4), 
-                            (0, 5), (5, 9), (9, 13), (13, 17), (0, 17), 
+                            (0, 5), (5, 9), (9, 13), (13, 17), (0, 17), (0, 9), (0,13),
                             (5, 6), (6, 7), (7, 8),
                             (9, 10), (10, 11), (11, 12),
                             (13, 14), (14, 15), (15, 16), 
@@ -66,7 +66,7 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                     end_point = (int(hand_landmark[connection[1]].x * w), int(hand_landmark[connection[1]].y * h))
                     cv2.line(frame, start_point, end_point, (0, 0, 255), 1)
 
-                text_position = (int(hand_landmark[0].x * w), int(hand_landmark[0].y * h))  # Adjust index as needed
+                text_position = (int(hand_landmark[0].x * w), int(hand_landmark[0].y * h))
                 cv2.putText(frame, gesture_name(gesture_recognition_result.gestures[i][0].category_name), text_position, cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
             except Exception as e:
                 print(f"Bad frame: {e}")
