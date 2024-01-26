@@ -2,26 +2,16 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
-
-def gesture_name(raw_gesture):
-    match raw_gesture:
-        case "None":
-            return "None"
-        case "Closed_Fist":
-            return "Closed fist"
-        case "Open_Palm":
-            return "Open palm"
-        case "Pointing_Up":
-            return "Pointing up"
-        case "Thumb_Down":
-            return "Thumb down"
-        case "Thumb_Up":
-            return "Thumb up"
-        case "Victory":
-            return "Victory"
-        case "ILoveYou":
-            return "I love you"
-
+gesture_mapping = {
+        "None": "None",
+        "Closed_Fist": "Closed fist",
+        "Open_Palm": "Open palm",
+        "Pointing_Up": "Pointing up",
+        "Thumb_Down": "Thumb down",
+        "Thumb_Up": "Thumb up",
+        "Victory": "Victory",
+        "ILoveYou": "I love you"
+    }
 
 model_path = 'data/gesture_recognizer.task'
 
@@ -68,7 +58,7 @@ with GestureRecognizer.create_from_options(options) as recognizer:
                     cv2.line(frame, start_point, end_point, (0, 0, 255), 1)
 
                 text_position = (int(hand_landmark[0].x * w), int(hand_landmark[0].y * h))
-                text_to_display = f"{gesture_name(gesture_recognition_result.gestures[i][0].category_name)}  {int(np.around(gesture_recognition_result.gestures[i][0].score, 2) * 100)}%"
+                text_to_display = f"{gesture_mapping[gesture_recognition_result.gestures[i][0].category_name]}  {int(np.around(gesture_recognition_result.gestures[i][0].score, 2) * 100)}%"
                 cv2.putText(frame, text_to_display, text_position, cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
             except Exception as e:
                 print(f"Bad frame: {e}")
